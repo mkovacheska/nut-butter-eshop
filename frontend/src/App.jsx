@@ -1,34 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8081/api/products')
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error("Error fetching products:", err));
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen bg-white px-8 py-12 font-sans">
+      {/* Editorial Header */}
+      <header className="mb-20 text-center">
+        <h1 className="text-4xl font-light tracking-[0.2em] uppercase mb-4">The Nut Library</h1>
+        <p className="text-gray-400 italic font-serif text-lg">Pure. Stone-ground. Organic.</p>
+      </header>
+
+      {/* Product Grid */}
+      <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
+        {products.map((product) => (
+          <div key={product.id} className="group cursor-pointer">
+            <div className="overflow-hidden bg-gray-100 aspect-[4/5] mb-6">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
+            <h3 className="text-sm tracking-widest uppercase mb-2">{product.name}</h3>
+            <p className="text-gray-500 text-sm mb-4 line-clamp-2">{product.description}</p>
+            <p className="text-sm font-medium">${product.price.toFixed(2)}</p>
+          </div>
+        ))}
+      </main>
+    </div>
   )
 }
 
