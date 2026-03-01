@@ -17,9 +17,9 @@ public class Main {
     @Bean
     CommandLineRunner start(ProductRepository repository) {
         return args -> {
-            repository.save(new Product("Classic Almond Butter", "Pure stone-ground almonds", 12.00, "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e"));
-            repository.save(new Product("Crunchy Peanut Butter", "Roasted peanuts with a crunch", 8.00, "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"));
-            repository.save(new Product("Cashew Cream", "Velvety smooth organic cashews", 15.00, "https://images.unsplash.com/photo-1536510233921-8e5043fce771"));
+            repository.save(new Product("Classic Almond Butter", "Creamy & salty almond butter", 12.00, "/images/almond-butter.jpeg"));
+            repository.save(new Product("Crunchy Peanut Butter", "Roasted peanuts with a crunch", 8.00, "/images/peanut-butter.jpeg"));
+            repository.save(new Product("Cashew Cream", "Velvety smooth cashews butter", 15.00, "/images/hazelnut-butter.jpeg"));
 
             System.out.println("Backend is ready and data is loaded!");
         };
