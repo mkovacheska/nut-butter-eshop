@@ -1,7 +1,7 @@
 # 🥜 Nut Butter Shop API
 
 ## Overview
-**Nut Butter Shop** is a premium online platform where users can discover and purchase artisanal, homemade healthy nut butters. The backend is built with **Java Spring Boot**, following a professional multi-layered architecture to ensure the app is production-ready and scalable.
+**Nut Butter Shop** is a online platform where users can discover and purchase artisanal, homemade healthy nut butters. The backend is built with **Java Spring Boot**, following a professional multi-layered architecture to ensure the app is production-ready and scalable.
 
 ---
 
