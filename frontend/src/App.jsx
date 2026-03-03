@@ -12,30 +12,33 @@ function App() {
 
     return (
         <div className="App">
-            <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px' }}>
-                {/* This looks for the logo in public/images/logo.png */}
-                <img
-                    src="/images/yellow.png"
-                    alt="Logo"
-                    style={{ width: '200px', marginBottom: '20px' }}
-                />
-
-                <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '3rem', color: '#1a3a8a' }}>
-                    Nut Library
-                </h1>
-                <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '1rem', color: '#1a3a8a' }}>Small-batch, homemade nut butters</p>
+            {/* 1. Modern Navigation Header */}
+            <header className="site-header">
+                <div className="header-content">
+                    <img src="/images/yellow.png" alt="Logo" className="nav-logo" />
+                    <div className="header-text">
+                        <h1 className="brand-title">Nut Library</h1>
+                        <p className="brand-subtitle">Small-batch, homemade nut butters</p>
+                    </div>
+                </div>
+                <div className="header-tag">Since 2020</div>
             </header>
 
-            <main>
+            {/* 2. Main Shop Section */}
+            <main className="shop-container">
                 <div className="product-grid">
                     {products.map((product) => (
                         <div key={product.id} className="product-card">
-                            <img src={product.imageUrl} alt={product.name}/>
-                            <h3>{product.name}</h3>
-                            <p>{product.description}</p>
-                            <div className="price-row">
-                                <span>${product.price.toFixed(2)}</span>
-                                <button>Add to Bag</button>
+                            <div className="image-container">
+                                <img src={product.imageUrl} alt={product.name} />
+                            </div>
+                            <div className="product-info">
+                                <h3>{product.name}</h3>
+                                <p className="product-desc">{product.description}</p>
+                                <div className="product-footer">
+                                    <span className="price">${product.price.toFixed(2)}</span>
+                                    <button className="add-btn">Add to Bag</button>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -44,4 +47,5 @@ function App() {
         </div>
     );
 }
-export default App
+
+export default App;
