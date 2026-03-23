@@ -8,7 +8,7 @@ function App() {
 
     // --- 2. LOAD DATA FROM BACKEND ---
     useEffect(() => {
-        fetch('http://localhost:8081/api/products')
+        fetch('http://localhost:8080/api/products')
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("Backend error:", err));
