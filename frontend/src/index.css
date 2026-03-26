@@ -4,7 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap');
 
-/* --- 1. Global Setup --- */
+
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
@@ -12,7 +12,7 @@ body {
   color: #1a1a1a;
 }
 
-/* --- 2. Navigation Header --- */
+
 .site-header {
   display: flex;
   justify-content: space-between;
@@ -54,7 +54,7 @@ body {
   letter-spacing: 1px;
 }
 
-/* --- 3. The Polished Menu --- */
+
 .nav-menu {
   display: flex;
   list-style: none;
@@ -64,7 +64,7 @@ body {
   align-items: center;
 }
 
-/* We style the BUTTON inside the list item to look like clean text */
+
 .nav-menu li button {
   background: none;
   border: none;
@@ -81,10 +81,10 @@ body {
 }
 
 .nav-menu li button:hover {
-  color: #f472b6; /* Brand pink on hover */
+  color: #f472b6; 
 }
 
-/* Special "Cart" button styling */
+
 .cart-link button {
   background: #1a3a8a !important;
   color: white !important;
@@ -103,7 +103,7 @@ body {
   transform: scale(0.95);
 }
 
-/* --- 4. Product Grid & Cards --- */
+
 .shop-container {
   max-width: 1200px;
   margin: 60px auto;
@@ -179,7 +179,7 @@ body {
   color: #fff;
 }
 
-/* --- 5. Animations --- */
+
 @keyframes pop {
   0% {
     transform: scale(1);
@@ -191,21 +191,21 @@ body {
     transform: scale(1);
   }
 }
-/* --- SIMPLE FOOTER STYLE --- */
+
 .site-footer {
-  margin-top: 80px;          /* Distance from the product grid */
-  padding: 60px 20px;        /* Space inside the footer */
-  background-color: #ffffff; /* Keeping it clean and white */
-  border-top: 1px solid #f0f0f0; /* Subtle line to separate from content */
-  text-align: center;        /* Centers everything */
+  margin-top: 80px;          
+  padding: 60px 20px;       
+  background-color: #ffffff; 
+  border-top: 1px solid #f0f0f0; 
+  text-align: center;    
 }
 
 .footer-content {
   max-width: 600px;
-  margin: 0 auto;            /* Centers the container itself */
+  margin: 0 auto;       
   display: flex;
   flex-direction: column;
-  gap: 12px;                 /* Space between the lines of text */
+  gap: 12px;        
 }
 
 .footer-content p {
@@ -215,16 +215,14 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Style for the @NutLibrary text */
 .footer-content p:nth-child(2) {
-  color: #1a3a8a;            /* Using your brand blue for the social handle */
+  color: #1a3a8a;    
   font-weight: 500;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 1px;
 }
 
-/* The small bottom row with dots */
 .footer-content div {
   text-transform: uppercase;
   letter-spacing: 1.5px;

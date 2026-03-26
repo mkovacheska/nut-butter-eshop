@@ -1,29 +1,26 @@
 import { useEffect, useState } from 'react'
 
 function App() {
-    // --- 1. STATE MANAGEMENT ---
     const [products, setProducts] = useState([]);
     const [cartCount, setCartCount] = useState(0);
     const [activePage, setActivePage] = useState('home'); // Tracks which section to show
 
-    // --- 2. LOAD DATA FROM BACKEND ---
     useEffect(() => {
-        fetch('http://localhost:8080/api/products')
+        fetch('http://localhost:9000/api/products')
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("Backend error:", err));
     }, []);
 
-    // --- 3. FUNCTIONS ---
     const addToCart = () => {
         setCartCount(prevCount => prevCount + 1);
     };
 
     return (
         <div className="App">
-            {/* --- HEADER & NAVIGATION --- */}
+            {}
             <header className="site-header">
-                {/* Left Column: Title and Subtitle stacked */}
+                {}
                 <div className="header-left">
                     <div className="header-text">
                         <h1 className="brand-title">Nut Library</h1>
@@ -31,12 +28,12 @@ function App() {
                     </div>
                 </div>
 
-                {/* Center Column: Larger Logo */}
+                {}
                 <div className="header-center">
                     <img src="/images/yellow.png" alt="Logo" className="nav-logo" />
                 </div>
 
-                {/* Right Column: Clean Menu */}
+                {}
                 <nav className="header-right">
                     <ul className="nav-menu">
                         <li><button onClick={() => setActivePage('home')}>Home</button></li>
@@ -48,10 +45,10 @@ function App() {
                     </ul>
                 </nav>
             </header>
-            {/* --- MAIN CONTENT (Changes based on activePage) --- */}
+            {}
             <main className="shop-container">
 
-                {/* VIEW: HOME */}
+                {}
                 {activePage === 'home' && (
                     <div className="home-hero" style={{ textAlign: 'center', padding: '80px 20px' }}>
                         <h2 style={{ fontSize: '3rem', fontFamily: 'Playfair Display, serif' }}>
@@ -66,7 +63,7 @@ function App() {
                     </div>
                 )}
 
-                {/* VIEW: PRODUCTS (The Grid) */}
+                {}
                 {activePage === 'products' && (
                     <div className="product-grid">
                         {products.map((product) => (
@@ -89,7 +86,7 @@ function App() {
                     </div>
                 )}
 
-                {/* VIEW: ABOUT */}
+                {}
                 {activePage === 'about' && (
                     <div className="about-section" style={{ textAlign: 'center', padding: '80px 20px' }}>
                         <h2 style={{ fontSize: '2.5rem', fontFamily: 'Playfair Display, serif' }}>Our Story</h2>
@@ -101,7 +98,7 @@ function App() {
                     </div>
                 )}
 
-                {/* VIEW: CART (Placeholder) */}
+                {}
                 {activePage === 'cart' && (
                     <div className="cart-section" style={{ textAlign: 'center', padding: '80px 20px' }}>
                         <h2>Your Bag ({cartCount})</h2>
