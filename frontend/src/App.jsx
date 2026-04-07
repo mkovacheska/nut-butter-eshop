@@ -31,6 +31,21 @@ function App() {
             return [...prevCart, { ...product, quantity: 1 }];
         });
     };
+    const updateQuantity = (productId, amount) => {
+    console.log("Button clicked for ID:", productId, "Adjust by:", amount);
+
+    setCart((prevCart) => {
+        const newCart = prevCart.map((item) => {
+            if (item.id === productId || item._id === productId) {
+                const newQty = (item.quantity || 1) + amount;
+                return { ...item, quantity: Math.max(1, newQty) };
+            }
+            return item;
+        });
+        console.log("New Cart State:", newCart);
+        return newCart;
+    });
+};
 
     const removeFromCart = (productId) => {
         setCart((prevCart) => prevCart.filter(item => item.id !== productId));
@@ -109,49 +124,97 @@ function App() {
                     } />
 
                     <Route path="/cart" element={
-                        <div className="shop-container">
-                            <div className="cart-section" style={{ padding: '80px 0', maxWidth: '800px', margin: '0 auto' }}>
-                                <h2 style={{fontFamily: 'Playfair Display, serif', fontSize: '2.5rem'}}>Your Library Bag</h2>
-                                {cart.length === 0 ? (
-                                    <p style={{marginTop: '20px'}}>Your bag is currently empty.</p>
-                                ) : (
-                                    <div className="cart-list" style={{marginTop: '40px'}}>
-                                        {cart.map(item => (
-                                            <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '20px' }}>
-                                                <img src={item.imageUrl} alt={item.name} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }} />
-                                                <div style={{ flex: 1, textAlign: 'left' }}>
-                                                    <h4 style={{fontFamily: 'Playfair Display, serif', fontSize: '1.4rem'}}>{item.name}</h4>
-                                                    <p style={{fontSize: '1rem', color: '#666'}}>${item.price.toFixed(2)} x {item.quantity}</p>
-                                                    {}
-                                                    <button 
-                                                        onClick={() => removeFromCart(item.id)}
-                                                        style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontSize: '0.8rem', padding: '0', marginTop: '10px', textDecoration: 'underline' }}
-                                                    >
-                                                        Remove Item
-                                                    </button>
-                                                </div>
-                                                <strong style={{fontSize: '1.2rem'}}>${(item.price * item.quantity).toFixed(2)}</strong>
-                                            </div>
-                                        ))}
-                                        <div style={{ textAlign: 'right', marginTop: '30px' }}>
-                                            <h3 style={{fontSize: '2rem'}}>Total: ${cartTotal.toFixed(2)}</h3>
-                                            <button className="add-btn" style={{marginTop: '20px', padding: '12px 30px'}}>Proceed to Checkout</button>
-                                        </div>
-                                    </div>
-                                )}
+    <div className="shop-container">
+        <div className="cart-section">
+            <h2 className="cart-header">Your Library Bag</h2>
+            {cart.length === 0 ? (
+                <p className="empty-msg">Your bag is currently empty.</p>
+            ) : (
+                <div className="cart-list">
+                    {cart.map(item => (
+                        <div key={item.id} className="cart-item-row">
+                            <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
+                            
+                            <div className="cart-item-info">
+                                <h4 className="cart-item-name">{item.name}</h4>
+                                <p className="cart-item-unit-price">${item.price.toFixed(2)}</p>
+                                
+                                {}
+                                <div className="quantity-tool">
+                                    <button 
+                                        className="qty-btn" 
+                                        onClick={() => updateQuantity(item.id, -1)}
+                                    >—</button>
+                                    
+                                    <span className="qty-val">{item.quantity}</span>
+                                    
+                                    <button 
+                                        className="qty-btn" 
+                                        onClick={() => updateQuantity(item.id, 1)}
+                                    >+</button>
+                                </div>
+
+                                <button 
+                                    className="remove-btn"
+                                    onClick={() => removeFromCart(item.id)}
+                                >
+                                    Remove Item
+                                </button>
+                            </div>
+                            
+                            <div className="cart-item-total">
+                                ${(item.price * item.quantity).toFixed(2)}
                             </div>
                         </div>
-                    } />
+                    ))}
+                    
+                    <div className="cart-summary">
+                        <h3 className="total-price">Total: ${cartTotal.toFixed(2)}</h3>
+                        <button className="checkout-btn">Proceed to Checkout</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    </div>
+} />
                 </Routes>
             </main>
 
             <footer className="site-footer">
-                <div className="footer-content">
-                    <p>2026 Nut Library — ©Girl Around The Food</p>
-                    <p>Follow our journey @girlaroundthefood</p>
-                    <p>Ohrid, Macedonia</p>
-                </div>
-            </footer>
+    <div className="footer-container">
+        {}
+        <div className="footer-column">
+            <h3 className="footer-logo">Nut Library</h3>
+            <p className="footer-about">
+                Stone-ground, small-batch nut butters crafted in the heart of Macedonia. 
+                Pure ingredients, poured with patience.
+            </p>
+        </div>
+
+        {}
+        <div className="footer-column">
+            <ul className="footer-links">
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/products">Shop All</Link></li>
+                <li><Link to="/about">Our Story</Link></li>
+            </ul>
+        </div>
+
+        {}
+        <div className="footer-column">
+            <h4 className="footer-heading">Follow Our Journey On Instagram:</h4>
+            <div className="footer-social-box">
+                <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noreferrer" className="instagram-tag">
+                    @girlaroundthefood
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div className="footer-bottom-bar">
+        <p>© 2026 Nut Library. All Rights Reserved.</p>
+    </div>
+</footer>
         </div>
     );
 }

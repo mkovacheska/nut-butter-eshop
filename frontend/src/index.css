@@ -223,3 +223,208 @@ body {
   height: 100%;
   object-fit: cover;
 }
+
+.cart-section {
+  padding: 60px 0;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cart-header {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  margin-bottom: 50px;
+  text-align: left;
+}
+
+.cart-item-row {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 30px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item-img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  background-color: #f9f9f9;
+}
+
+.cart-item-info {
+  flex: 1;
+  text-align: left;
+}
+
+.cart-item-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  margin: 0 0 5px 0;
+}
+
+.cart-item-unit-price {
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.quantity-tool {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #1a1a1a;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.qty-btn:hover {
+  background: #1a1a1a;
+  color: white;
+}
+
+.qty-val {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-width: 25px;
+  text-align: center;
+}
+
+.cart-item-total {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a3a8a;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  text-decoration: underline;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cart-summary {
+  text-align: right;
+  margin-top: 50px;
+}
+
+.total-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+}
+
+.checkout-btn {
+  margin-top: 20px;
+  padding: 15px 40px;
+  background: #1a3a8a;
+  color: white;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr; 
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: #1a3a8a;
+  margin-bottom: 15px;
+}
+
+.footer-about {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #666;
+  max-width: 350px;
+}
+
+.footer-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #111;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #f472b6;
+}
+
+.instagram-tag {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer-loc {
+  font-size: 0.85rem;
+  color: #999;
+  letter-spacing: 0.5px;
+}
+
+.footer-bottom-bar {
+  margin-top: 80px;
+  padding-top: 30px;
+  border-top: 1px solid #f9f9f9;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  .footer-about {
+    margin: 0 auto;
+  }
+}
