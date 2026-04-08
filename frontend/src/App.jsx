@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, NavLink } from 'react-router-dom';
 
 function App() {
     const [products, setProducts] = useState([]);
@@ -72,11 +72,25 @@ function App() {
 
                 <nav className="header-right">
                     <ul className="nav-menu">
-                        <li><Link to="/">Home</Link></li>
-                        <li><Link to="/products">Products</Link></li>
-                        <li><Link to="/about">About</Link></li>
+                         <li>
+                            <NavLink to="/" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                                Home
+                            </NavLink>
+                        </li>
+                        <li>
+                             <NavLink to="/products" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                                Products
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/about" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                                About
+                            </NavLink>
+                        </li>
                         <li className="cart-link">
-                            <Link to="/cart">Cart ({cartCount})</Link>
+                            <NavLink to="/cart" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                                Cart ({cartCount})
+                            </NavLink>
                         </li>
                     </ul>
                 </nav>
@@ -124,17 +138,16 @@ function App() {
                     } />
 
                     <Route path="/cart" element={
-    <div className="shop-container">
-        <div className="cart-section">
-            <h2 className="cart-header">Your Library Bag</h2>
-            {cart.length === 0 ? (
-                <p className="empty-msg">Your bag is currently empty.</p>
-            ) : (
-                <div className="cart-list">
-                    {cart.map(item => (
-                        <div key={item.id} className="cart-item-row">
-                            <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
-                            
+                        <div className="shop-container">
+                             <div className="cart-section">
+                                <h2 className="cart-header">Your Library Bag</h2>
+                                 {cart.length === 0 ? (
+                                 <p className="empty-msg">Your bag is currently empty.</p>
+                                 ) : (
+                                <div className="cart-list">
+                                     {cart.map(item => (
+                                          <div key={item.id} className="cart-item-row">
+                                            <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
                             <div className="cart-item-info">
                                 <h4 className="cart-item-name">{item.name}</h4>
                                 <p className="cart-item-unit-price">${item.price.toFixed(2)}</p>
@@ -177,6 +190,45 @@ function App() {
         </div>
     </div>
 } />
+{}
+<Route path="/about" element={
+    <div className="about-page">
+        <div className="about-container">
+            {}
+            <div className="about-image-side">
+                <img 
+                    src="/images/founder.JPG"
+                    alt="Mihaela - Founder of Nut Library" 
+                    className="about-img" 
+                />
+                <div className="founder-caption">
+                    <span className="founder-name">Mihaela</span>
+                    <span className="founder-title">Founder of Girl Around The Food</span>
+                </div>
+            </div>
+            
+            {}
+            <div className="about-text-side">
+                <h2 className="about-title">The Story Behind <br/> The Library</h2>
+                <p className="about-intro">
+                    What started as a personal quest for the perfect jar of nut butter, eventually turned from a kitchen experiment into a small business I'm proud of.
+                </p>
+                <div className="about-details">
+                    <p>
+                        Nut Library began simply as a hobby. I was looking for healthy, fresh nut butter that I just couldn't find on store shelves—something pure, freshly made, with no unnecessary additives.
+                    </p>
+                    <p>
+                        After perfecting the formula at home for a couple of years, in 2020 I decided to share it with others. What began with a few jars has grown into the business you see today, built on the same promise I made to myself: never settle for anything less than the freshest and purest ingredients.
+                    </p>
+                    <p>
+                        From my kitchen in Ohrid to your home, thank you for being part of this journey.
+                    </p>
+                </div>
+                <Link to="/products" className="about-shop-btn">Shop the Collection</Link>
+            </div>
+        </div>
+    </div>
+} />
                 </Routes>
             </main>
 
@@ -186,8 +238,8 @@ function App() {
         <div className="footer-column">
             <h3 className="footer-logo">Nut Library</h3>
             <p className="footer-about">
-                Stone-ground, small-batch nut butters crafted in the heart of Macedonia. 
-                Pure ingredients, poured with patience.
+                Homemade nut butters, crafted in the heart of Ohrid.
+                Each jar contains just good quality nuts, no other unnecessary ingredients!
             </p>
         </div>
 
@@ -202,17 +254,19 @@ function App() {
 
         {}
         <div className="footer-column">
-            <h4 className="footer-heading">Follow Our Journey On Instagram:</h4>
+            <h4 className="footer-heading">Follow Our Journey on Instagram: </h4>
             <div className="footer-social-box">
                 <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noreferrer" className="instagram-tag">
-                    @girlaroundthefood
+                    {}
+                    <i className="fab fa-instagram"></i> @girlaroundthefood
                 </a>
             </div>
         </div>
     </div>
 
     <div className="footer-bottom-bar">
-        <p>© 2026 Nut Library. All Rights Reserved.</p>
+        <p>© 2026 NUT LIBRARY. ALL RIGHTS RESERVED.</p>
+        <p>since 2020</p>
     </div>
 </footer>
         </div>
