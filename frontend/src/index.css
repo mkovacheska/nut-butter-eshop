@@ -552,3 +552,53 @@ body {
   margin-top: 4px;
 }
 
+.about-page .back-link {
+    transition: color 0.3s ease;
+}
+
+.about-page .back-link:hover {
+    color: #1a3a8a !important; 
+}
+
+.size-btn {
+    font-family: inherit;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border-radius: 2px; 
+}
+
+.size-btn.active {
+    box-shadow: 0 4px 10px rgba(26, 58, 138, 0.2);
+    transform: translateY(-1px);
+}
+
+.size-btn:hover:not(.active) {
+    background-color: #f8f8f8 !important;
+}
+
+.about-shop-btn {
+    background-color: #1a3a8a; 
+    color: white;
+    padding: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s active;
+}
+
+.about-shop-btn:hover {
+    background-color: #152d6b;
+}
+
+.about-shop-btn:active {
+    transform: scale(0.98);
+}
+
+.detail-price {
+    font-family: 'Playfair Display', serif; 
+    color: #1a3a8a;
+}
+
+
