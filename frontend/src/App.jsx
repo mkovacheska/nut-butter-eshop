@@ -8,6 +8,8 @@ function App() {
         return savedCart ? JSON.parse(savedCart) : [];
     });
 
+    const MKD_RATE = 60;
+
     useEffect(() => {
         fetch('http://localhost:9000/api/products')
             .then(res => res.json())
@@ -65,7 +67,7 @@ function App() {
         }
 
         const modifiers = product.sizeModifiers || {};
-        const currentPrice = product.price + (modifiers[selectedSize] || 0);
+        const currentPrice = (product.price + (modifiers[selectedSize] || 0)) * MKD_RATE;
 
         return (
             <div className="about-page">
@@ -77,7 +79,7 @@ function App() {
                     <div className="about-text-side">
                         <Link to="/products" className="back-link" style={{textDecoration: 'none', color: '#888', fontSize: '0.8rem'}}>← BACK TO SHOP</Link>
                         <h2 className="about-title" style={{marginTop: '10px'}}>{product.name}</h2>
-                        <p className="detail-price" style={{fontSize: '1.5rem', fontWeight: 'bold', margin: '15px 0'}}>${currentPrice.toFixed(2)}</p>
+                        <p className="detail-price" style={{fontSize: '1.5rem', fontWeight: 'bold', margin: '15px 0'}}>{Math.round(currentPrice)} MKD</p>
                         
                         <div className="size-selector" style={{margin: '30px 0'}}>
                             <p style={{fontSize: '0.8rem', fontWeight: '600', marginBottom: '10px'}}>SELECT SIZE</p>
@@ -115,7 +117,7 @@ function App() {
                         <button 
                             className="about-shop-btn" 
                             style={{width: '100%', marginTop: '30px', border: 'none', cursor: 'pointer'}}
-                            onClick={() => addToCart(product, selectedSize, currentPrice)}
+                            onClick={() => addToCart(product, selectedSize, (product.price + (modifiers[selectedSize] || 0)))}
                         >
                             Add {selectedSize} to Bag
                         </button>
@@ -175,9 +177,10 @@ function App() {
                                         <div className="product-info">
                                             <p className="product-desc">{product.description}</p>
                                             <div className="product-footer">
-                                                <span className="price">from ${product.price.toFixed(2)}</span>
-                                                <Link to={`/product/${product.id}`} className="view-btn" style={{textDecoration: 'none'}}>
-                                                    Select Size
+                                                {}
+                                                <span className="price">from {Math.round(product.price * MKD_RATE)} MKD</span>
+                                                <Link to={`/product/${product.id}`} className="more-btn">
+                                                    More
                                                 </Link>
                                             </div>
                                         </div>
@@ -202,7 +205,8 @@ function App() {
                                                 <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
                                                 <div className="cart-item-info">
                                                     <h4 className="cart-item-name">{item.name} ({item.size})</h4>
-                                                    <p className="cart-item-unit-price">${item.price.toFixed(2)}</p>
+                                                    {}
+                                                    <p className="cart-item-unit-price">{Math.round(item.price * MKD_RATE)} MKD</p>
                                                     <div className="quantity-tool">
                                                         <button className="qty-btn" onClick={() => updateQuantity(item.id, -1, item.size)}>—</button>
                                                         <span className="qty-val">{item.quantity}</span>
@@ -210,11 +214,13 @@ function App() {
                                                     </div>
                                                     <button className="remove-btn" onClick={() => removeFromCart(item.id, item.size)}>Remove</button>
                                                 </div>
-                                                <div className="cart-item-total">${(item.price * item.quantity).toFixed(2)}</div>
+                                                {}
+                                                <div className="cart-item-total">{Math.round((item.price * item.quantity) * MKD_RATE)} MKD</div>
                                             </div>
                                         ))}
                                         <div className="cart-summary">
-                                            <h3 className="total-price">Total: ${cartTotal.toFixed(2)}</h3>
+                                            {}
+                                            <h3 className="total-price">Total: {Math.round(cartTotal * MKD_RATE)} MKD</h3>
                                             <button className="checkout-btn">Proceed to Checkout</button>
                                         </div>
                                     </div>
@@ -238,7 +244,8 @@ function App() {
                                     <p className="about-intro">What started as a personal quest for the perfect jar of nut butter, eventually turned from a kitchen experiment into a small business I'm proud of.</p>
                                     <div className="about-details">
                                         <p>"Girl Around The Food: Nut Library" began simply as a hobby. I was looking for healthy, fresh nut butter that I just couldn't find on store shelves.</p>
-                                        <p>After perfecting the formula at home, in 2020 I decided to share it with others.</p>
+                                        <p>After perfecting the formula at home, in 2020 I decided to share it with others and here we are, 6 years later, still delivering the same quality and happiness to my customers. What started as a small assortiment of products, has grown into a multiple nut butter varieties, at different sizes and homemade granola.</p>
+                                        <p>Everything is made in small batches and with the highest quality ingredients. With every order of nut butter, you get a fresh daily made product just for you- not a stored product.</p>
                                     </div>
                                     <Link to="/products" className="about-shop-btn">Shop the Collection</Link>
                                 </div>
@@ -252,7 +259,9 @@ function App() {
                 <div className="footer-container">
                     <div className="footer-column">
                         <h3 className="footer-logo">Nut Library</h3>
-                        <p className="footer-about">Homemade nut butters, crafted in the heart of Ohrid.</p>
+                        <p className="footer-about">Homemade nut butters, crafted in the heart of Ohrid. 
+                            Made in small batches with love, attention and the finest ingredients.
+                        </p>
                     </div>
                     <div className="footer-column">
                         <ul className="footer-links">
@@ -262,7 +271,7 @@ function App() {
                         </ul>
                     </div>
                     <div className="footer-column">
-                        <h4 className="footer-heading">Follow Our Journey: </h4>
+                        <h4 className="footer-heading">Follow Our Journey on Instagram: </h4>
                         <div className="footer-social-box">
                             <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noreferrer" className="instagram-tag">@girlaroundthefood</a>
                         </div>
