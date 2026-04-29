@@ -192,42 +192,52 @@ function App() {
 
                     <Route path="/product/:id" element={<ProductDetail />} />
 
-                    <Route path="/cart" element={
-                        <div className="shop-container">
-                            <div className="cart-section">
-                                <h2 className="cart-header">Your Library Bag</h2>
-                                {cart.length === 0 ? (
-                                    <p className="empty-msg">Your bag is currently empty.</p>
-                                ) : (
-                                    <div className="cart-list">
-                                        {cart.map(item => (
-                                            <div key={`${item.id}-${item.size}`} className="cart-item-row">
-                                                <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
-                                                <div className="cart-item-info">
-                                                    <h4 className="cart-item-name">{item.name} ({item.size})</h4>
-                                                    {}
-                                                    <p className="cart-item-unit-price">{Math.round(item.price * MKD_RATE)} MKD</p>
-                                                    <div className="quantity-tool">
-                                                        <button className="qty-btn" onClick={() => updateQuantity(item.id, -1, item.size)}>—</button>
-                                                        <span className="qty-val">{item.quantity}</span>
-                                                        <button className="qty-btn" onClick={() => updateQuantity(item.id, 1, item.size)}>+</button>
-                                                    </div>
-                                                    <button className="remove-btn" onClick={() => removeFromCart(item.id, item.size)}>Remove</button>
-                                                </div>
-                                                {}
-                                                <div className="cart-item-total">{Math.round((item.price * item.quantity) * MKD_RATE)} MKD</div>
-                                            </div>
-                                        ))}
-                                        <div className="cart-summary">
-                                            {}
-                                            <h3 className="total-price">Total: {Math.round(cartTotal * MKD_RATE)} MKD</h3>
-                                            <button className="checkout-btn">Proceed to Checkout</button>
-                                        </div>
+                   <Route path="/cart" element={
+    <div className="shop-container">
+        <div className="cart-section">
+            {cart.length === 0 ? (
+                /* This container allows us to center everything perfectly in the middle of the page */
+                <div className="empty-cart-container">
+                    <h2 className="cart-header" style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        Your Library Bag
+                    </h2>
+                    <p className="empty-msg" style={{ marginBottom: '30px' }}>
+                        Your bag is currently empty.
+                    </p>
+                    <Link to="/products" className="about-shop-btn">
+                        Explore the Library
+                    </Link>
+                </div>
+            ) : (
+                <>
+                    <h2 className="cart-header">Your Library Bag</h2>
+                    <div className="cart-list">
+                        {cart.map(item => (
+                            <div key={`${item.id}-${item.size}`} className="cart-item-row">
+                                <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
+                                <div className="cart-item-info">
+                                    <h4 className="cart-item-name">{item.name} ({item.size})</h4>
+                                    <p className="cart-item-unit-price">{Math.round(item.price * MKD_RATE)} MKD</p>
+                                    <div className="quantity-tool">
+                                        <button className="qty-btn" onClick={() => updateQuantity(item.id, -1, item.size)}>—</button>
+                                        <span className="qty-val">{item.quantity}</span>
+                                        <button className="qty-btn" onClick={() => updateQuantity(item.id, 1, item.size)}>+</button>
                                     </div>
-                                )}
+                                    <button className="remove-btn" onClick={() => removeFromCart(item.id, item.size)}>Remove</button>
+                                </div>
+                                <div className="cart-item-total">{Math.round((item.price * item.quantity) * MKD_RATE)} MKD</div>
                             </div>
+                        ))}
+                        <div className="cart-summary">
+                            <h3 className="total-price">Total: {Math.round(cartTotal * MKD_RATE)} MKD</h3>
+                            <button className="checkout-btn">Proceed to Checkout</button>
                         </div>
-                    } />
+                    </div>
+                </>
+            )}
+        </div>
+    </div>
+} />
 
                     <Route path="/about" element={
                         <div className="about-page">
