@@ -1,5 +1,130 @@
+import emailjs from '@emailjs/browser';
 import { useEffect, useState } from 'react';
-import { Routes, Route, Link, NavLink, useParams } from 'react-router-dom';
+import { Routes, Route, Link, NavLink, useParams, useNavigate } from 'react-router-dom';
+
+const OrderConfirmation = () => {
+    return (
+        <div className="shop-container" style={{ textAlign: 'center', padding: '100px 20px' }}>
+            <h2 className="checkout-main-title">Order Confirmed!</h2>
+            <p style={{ fontFamily: 'Inter, sans-serif', color: '#555', marginBottom: '40px' }}>
+                Thank you for visiting the Library. You will receive an email confirmation soon.
+            </p>
+            <Link to="/">
+                <button className="checkout-btn-main" style={{ width: 'auto', padding: '15px 40px' }}>
+                    BACK TO SHOPPING
+                </button>
+            </Link>
+        </div>
+    );
+};
+
+const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        name: '', email: '', address: '', city: '', phone: ''
+    });
+
+    const DELIVERY_FEE_MKD = 200;
+    const subtotalMKD = Math.round(cartTotal * MKD_RATE);
+    const finalTotalMKD = subtotalMKD + DELIVERY_FEE_MKD;
+
+    const handleInput = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const orderDetailsString = cart.map(item => 
+        `${item.name} (${item.size}) x ${item.quantity}`
+    ).join('\n');
+
+    const templateParams = {
+        user_name: formData.name,
+        user_email: formData.email,
+        user_phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        total_price: `${finalTotalMKD} MKD`,
+        order_details: orderDetailsString
+    };
+
+    emailjs.send(
+        'service_5skj9vb',       
+        'template_82drr57', 
+        templateParams,
+        'xVyyuL8-4LH8xN9Ji' 
+    )
+    .then((response) => {
+        console.log('Email sent successfully!', response.status, response.text);
+        setCart([]);
+        navigate('/order-confirmation'); 
+    })
+    .catch((err) => {
+        console.error('Email failed to send:', err);
+        setCart([]);
+        navigate('/order-confirmation');
+    });
+};
+
+    return (
+        <div className="shop-container">
+            <div className="checkout-layout">
+                <div className="checkout-form-side">
+                    <h2 className="checkout-main-title">Checkout</h2>
+                    <form onSubmit={handleSubmit}>
+                        <h3 className="checkout-subheading">Shipping Details</h3>
+                        <div className="checkout-input-stack">
+                            <input name="name" placeholder="Full Name" onChange={handleInput} required className="checkout-field" />
+                            <input name="email" type="email" placeholder="Email Address" onChange={handleInput} required className="checkout-field" />
+                            <input name="address" placeholder="Shipping Address" onChange={handleInput} required className="checkout-field" />
+                            <div className="checkout-row-double">
+                                <input name="city" placeholder="City" onChange={handleInput} required className="checkout-field" />
+                                <input name="phone" placeholder="Phone Number" onChange={handleInput} required className="checkout-field" />
+                            </div>
+                        </div>
+
+                        <h3 className="checkout-subheading" style={{marginTop: '30px'}}>Payment Method</h3>
+                        <div className="payment-box">
+                            <label className="payment-radio">
+                                <input type="radio" checked readOnly />
+                                <span>Pay on Delivery (Cash) — {DELIVERY_FEE_MKD} MKD Delivery</span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" className="checkout-btn-main">PLACE ORDER</button>
+                    </form>
+                </div>
+
+                <div className="order-summary-card">
+                    <h3 className="summary-title">Your Order</h3>
+                    <div className="summary-items">
+                        {cart.map(item => (
+                            <div key={`${item.id}-${item.size}`} className="summary-item-row">
+                                <span>{item.name} ({item.size}) x {item.quantity}</span>
+                                <span>{Math.round((item.price * item.quantity) * MKD_RATE)} MKD</span>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="summary-totals">
+                        <div className="summary-row">
+                            <span>Subtotal</span>
+                            <span>{subtotalMKD} MKD</span>
+                        </div>
+                        <div className="summary-row">
+                            <span>Delivery</span>
+                            <span>{DELIVERY_FEE_MKD} MKD</span>
+                        </div>
+                        <div className="summary-row grand-total">
+                            <span>Total</span>
+                            <span>{finalTotalMKD} MKD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 function App() {
     const [products, setProducts] = useState([]);
@@ -162,7 +287,15 @@ function App() {
                             </div>
                         </div>
                     } />
-
+                    <Route path="/checkout" element={
+                        <Checkout 
+                            cart={cart} 
+                            setCart={setCart}
+                            cartTotal={cartTotal} 
+                            MKD_RATE={MKD_RATE} 
+                        />
+} />
+                     <Route path="/order-confirmation" element={<OrderConfirmation />} />
                     <Route path="/products" element={
                         <div className="shop-container">
                             <div className="product-grid">
@@ -196,7 +329,6 @@ function App() {
     <div className="shop-container">
         <div className="cart-section">
             {cart.length === 0 ? (
-                /* This container allows us to center everything perfectly in the middle of the page */
                 <div className="empty-cart-container">
                     <h2 className="cart-header" style={{ textAlign: 'center', marginBottom: '20px' }}>
                         Your Library Bag
@@ -230,7 +362,9 @@ function App() {
                         ))}
                         <div className="cart-summary">
                             <h3 className="total-price">Total: {Math.round(cartTotal * MKD_RATE)} MKD</h3>
-                            <button className="checkout-btn">Proceed to Checkout</button>
+                            <Link to="/checkout" style={{ textDecoration: 'none' }}>
+                                <button className="checkout-btn">Proceed to Checkout</button>
+                            </Link>
                         </div>
                     </div>
                 </>
