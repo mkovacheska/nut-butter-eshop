@@ -50,7 +50,7 @@ const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
     };
 
     emailjs.send(
-        'service_5skj9vb',       
+        'service_xx819gu',       
         'template_82drr57', 
         templateParams,
         'xVyyuL8-4LH8xN9Ji' 
