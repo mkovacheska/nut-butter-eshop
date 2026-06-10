@@ -256,14 +256,15 @@ function App() {
         <div className="App">
             <header className="site-header">
                 <div className="header-left">
-                    <div className="header-text">
-                        <h1 className="brand-title">Nut Library</h1>
-                        <p className="brand-subtitle">Small-batch, homemade nut butters</p>
-                    </div>
+                    <Link to="/">
+                        <img 
+                        src="/images/gatf-logo.png"
+                        className="nav-logo-left" 
+                        />
+                    </Link>
                 </div>
-                <div className="header-center">
-                    <Link to="/"><img src="/images/yellow.png" alt="Logo" className="nav-logo" /></Link>
-                </div>
+
+                
                 <nav className="header-right">
                     <ul className="nav-menu">
                         <li><NavLink to="/" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>Home</NavLink></li>
@@ -400,30 +401,35 @@ function App() {
             </main>
 
             <footer className="site-footer">
-                <div className="footer-container">
-                    <div className="footer-column">
-                        <h3 className="footer-logo">Nut Library</h3>
-                        <p className="footer-about">Homemade nut butters, crafted in the heart of Ohrid. 
-                            Made in small batches with love, attention and the finest ingredients.
+                 <div className="footer-container">
+                {}
+                     <div className="footer-left">
+                         <h3 className="footer-brand-title">NUT LIBRARY</h3>
+                         <p className="footer-brand-bio">
+                         Homemade nut butters, crafted in the heart of Ohrid. 
+                         Made in small batches with love, attention and the finest ingredients.
                         </p>
                     </div>
-                    <div className="footer-column">
-                        <ul className="footer-links">
-                            <li><Link to="/">Home</Link></li>
-                            <li><Link to="/products">Shop All</Link></li>
-                            <li><Link to="/about">Our Story</Link></li>
-                        </ul>
+
+                {}
+                    <div className="footer-right">
+                     <div className="footer-instagram-group">
+                        <p className="footer-social-label">FOLLOW OUR JOURNEY ON INSTAGRAM:</p>
+                            <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noopener noreferrer" className="footer-instagram-handle">
+                            @girlaroundthefood
+                            </a>
                     </div>
-                    <div className="footer-column">
-                        <h4 className="footer-heading">Follow Our Journey on Instagram: </h4>
-                        <div className="footer-social-box">
-                            <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noreferrer" className="instagram-tag">@girlaroundthefood</a>
-                        </div>
+      
+                     <div className="footer-inline-nav">
+                         <Link to="/">HOME</Link> | <Link to="/products">SHOP</Link> | <Link to="/about">ABOUT</Link>
                     </div>
                 </div>
-                <div className="footer-bottom-bar">
-                    <p>© 2026 NUT LIBRARY. ALL RIGHTS RESERVED.</p>
-                    <p>since 2020</p>
+             </div>
+
+                {}
+                <div className="footer-bottom">
+                <p>© 2026 NUT LIBRARY. ALL RIGHTS RESERVED.</p>
+                <p>SINCE 2020</p>
                 </div>
             </footer>
         </div>
