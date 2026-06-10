@@ -3,6 +3,7 @@ package org.example.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(length = 1000)
     private String description;
     private Double price;
     private String imageUrl;
