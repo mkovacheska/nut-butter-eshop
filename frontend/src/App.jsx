@@ -33,39 +33,39 @@ const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
     };
 
     const handleSubmit = (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    const orderDetailsString = cart.map(item => 
-        `${item.name} (${item.size}) x ${item.quantity}`
-    ).join('\n');
+        const orderDetailsString = cart.map(item => 
+            `${item.name} (${item.size}) x ${item.quantity}`
+        ).join('\n');
 
-    const templateParams = {
-        user_name: formData.name,
-        user_email: formData.email,
-        user_phone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        total_price: `${finalTotalMKD} MKD`,
-        order_details: orderDetailsString
+        const templateParams = {
+            user_name: formData.name,
+            user_email: formData.email,
+            user_phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            total_price: `${finalTotalMKD} MKD`,
+            order_details: orderDetailsString
+        };
+
+        emailjs.send(
+            'service_xx819gu',       
+            'template_82drr57', 
+            templateParams,
+            'xVyyuL8-4LH8xN9Ji' 
+        )
+        .then((response) => {
+            console.log('Email sent successfully!', response.status, response.text);
+            setCart([]);
+            navigate('/order-confirmation'); 
+        })
+        .catch((err) => {
+            console.error('Email failed to send:', err);
+            setCart([]);
+            navigate('/order-confirmation');
+        });
     };
-
-    emailjs.send(
-        'service_5skj9vb',       
-        'template_82drr57', 
-        templateParams,
-        'xVyyuL8-4LH8xN9Ji' 
-    )
-    .then((response) => {
-        console.log('Email sent successfully!', response.status, response.text);
-        setCart([]);
-        navigate('/order-confirmation'); 
-    })
-    .catch((err) => {
-        console.error('Email failed to send:', err);
-        setCart([]);
-        navigate('/order-confirmation');
-    });
-};
 
     return (
         <div className="shop-container">
@@ -183,6 +183,13 @@ function App() {
         const { id } = useParams();
         const product = products.find(p => p.id === parseInt(id));
         const [selectedSize, setSelectedSize] = useState("200g");
+        
+        const [mainImage, setMainImage] = useState("");
+        useEffect(() => {
+            if (product) {
+                setMainImage(product.images && product.images.length > 0 ? product.images[0] : product.imageUrl);
+            }
+        }, [product]);
 
         if (products.length === 0) {
             return <div className="shop-container"><p>Loading library...</p></div>;
@@ -197,8 +204,36 @@ function App() {
         return (
             <div className="about-page">
                 <div className="about-container">
-                    <div className="about-image-side">
-                        <img src={product.imageUrl} alt={product.name} className="about-img" />
+                    
+                    <div className="about-image-side" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <img 
+                            src={mainImage || product.imageUrl} 
+                            alt={product.name} 
+                            className="about-img" 
+                            style={{ width: '100%', objectFit: 'cover' }}
+                        />
+                        
+                        {product.images && product.images.length > 0 && (
+                            <div className="thumbnail-row" style={{ display: 'flex', gap: '15px', marginTop: '20px', overflowX: 'auto', paddingBottom: '10px' }}>
+                                {product.images.map((imgUrl, index) => (
+                                    <img 
+                                        key={index}
+                                        src={imgUrl} 
+                                        alt={`${product.name} thumbnail ${index + 1}`}
+                                        onClick={() => setMainImage(imgUrl)}
+                                        style={{
+                                            width: '80px',
+                                            height: '80px',
+                                            objectFit: 'cover',
+                                            cursor: 'pointer',
+                                            opacity: mainImage === imgUrl ? 1 : 0.6,
+                                            border: mainImage === imgUrl ? '2px solid #1a3a8a' : '1px solid transparent',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                     
                     <div className="about-text-side">
@@ -234,9 +269,9 @@ function App() {
                             </div>
                         </div>
 
+                        {/* This now displays the FULL rich description with correct paragraph breaks (\n\n) */}
                         <div className="about-details">
-                            <p>{product.description}</p>
-                            <p>All of our nut butters are stone-ground and freshly made in small batches in Ohrid.</p>
+                            <p style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
                         </div>
 
                         <button 
@@ -256,14 +291,15 @@ function App() {
         <div className="App">
             <header className="site-header">
                 <div className="header-left">
-                    <div className="header-text">
-                        <h1 className="brand-title">Nut Library</h1>
-                        <p className="brand-subtitle">Small-batch, homemade nut butters</p>
-                    </div>
+                    <Link to="/">
+                        <img 
+                            src="/images/gatf-logo.png"
+                            className="nav-logo-left" 
+                            alt="Logo"
+                        />
+                    </Link>
                 </div>
-                <div className="header-center">
-                    <Link to="/"><img src="/images/yellow.png" alt="Logo" className="nav-logo" /></Link>
-                </div>
+
                 <nav className="header-right">
                     <ul className="nav-menu">
                         <li><NavLink to="/" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>Home</NavLink></li>
@@ -294,8 +330,8 @@ function App() {
                             cartTotal={cartTotal} 
                             MKD_RATE={MKD_RATE} 
                         />
-} />
-                     <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                    } />
+                    <Route path="/order-confirmation" element={<OrderConfirmation />} />
                     <Route path="/products" element={
                         <div className="shop-container">
                             <div className="product-grid">
@@ -308,9 +344,11 @@ function App() {
                                             <h3>{product.name}</h3>
                                         </Link>
                                         <div className="product-info">
-                                            <p className="product-desc">{product.description}</p>
+                                            {/* Description removed from here entirely to keep your shop grid cards perfectly uniform */}
+                                            <p className="product-desc" style={{ fontSize: '0.9rem', color: '#666', margin: '10px 0 15px 0', lineHeight: '1.4' }}>
+                            {product.description.split('\n\n')[0]}
+                        </p>
                                             <div className="product-footer">
-                                                {}
                                                 <span className="price">from {Math.round(product.price * MKD_RATE)} MKD</span>
                                                 <Link to={`/product/${product.id}`} className="more-btn">
                                                     More
@@ -325,53 +363,53 @@ function App() {
 
                     <Route path="/product/:id" element={<ProductDetail />} />
 
-                   <Route path="/cart" element={
-    <div className="shop-container">
-        <div className="cart-section">
-            {cart.length === 0 ? (
-                <div className="empty-cart-container">
-                    <h2 className="cart-header" style={{ textAlign: 'center', marginBottom: '20px' }}>
-                        Your Library Bag
-                    </h2>
-                    <p className="empty-msg" style={{ marginBottom: '30px' }}>
-                        Your bag is currently empty.
-                    </p>
-                    <Link to="/products" className="about-shop-btn">
-                        Explore the Library
-                    </Link>
-                </div>
-            ) : (
-                <>
-                    <h2 className="cart-header">Your Library Bag</h2>
-                    <div className="cart-list">
-                        {cart.map(item => (
-                            <div key={`${item.id}-${item.size}`} className="cart-item-row">
-                                <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
-                                <div className="cart-item-info">
-                                    <h4 className="cart-item-name">{item.name} ({item.size})</h4>
-                                    <p className="cart-item-unit-price">{Math.round(item.price * MKD_RATE)} MKD</p>
-                                    <div className="quantity-tool">
-                                        <button className="qty-btn" onClick={() => updateQuantity(item.id, -1, item.size)}>—</button>
-                                        <span className="qty-val">{item.quantity}</span>
-                                        <button className="qty-btn" onClick={() => updateQuantity(item.id, 1, item.size)}>+</button>
+                    <Route path="/cart" element={
+                        <div className="shop-container">
+                            <div className="cart-section">
+                                {cart.length === 0 ? (
+                                    <div className="empty-cart-container">
+                                        <h2 className="cart-header" style={{ textAlign: 'center', marginBottom: '20px' }}>
+                                            Your Library Bag
+                                        </h2>
+                                        <p className="empty-msg" style={{ marginBottom: '30px' }}>
+                                            Your bag is currently empty.
+                                        </p>
+                                        <Link to="/products" className="about-shop-btn">
+                                            Explore the Library
+                                        </Link>
                                     </div>
-                                    <button className="remove-btn" onClick={() => removeFromCart(item.id, item.size)}>Remove</button>
-                                </div>
-                                <div className="cart-item-total">{Math.round((item.price * item.quantity) * MKD_RATE)} MKD</div>
+                                ) : (
+                                    <>
+                                        <h2 className="cart-header">Your Library Bag</h2>
+                                        <div className="cart-list">
+                                            {cart.map(item => (
+                                                <div key={`${item.id}-${item.size}`} className="cart-item-row">
+                                                    <img src={item.imageUrl} alt={item.name} className="cart-item-img" />
+                                                    <div className="cart-item-info">
+                                                        <h4 className="cart-item-name">{item.name} ({item.size})</h4>
+                                                        <p className="cart-item-unit-price">{Math.round(item.price * MKD_RATE)} MKD</p>
+                                                        <div className="quantity-tool">
+                                                            <button className="qty-btn" onClick={() => updateQuantity(item.id, -1, item.size)}>—</button>
+                                                            <span className="qty-val">{item.quantity}</span>
+                                                            <button className="qty-btn" onClick={() => updateQuantity(item.id, 1, item.size)}>+</button>
+                                                        </div>
+                                                        <button className="remove-btn" onClick={() => removeFromCart(item.id, item.size)}>Remove</button>
+                                                    </div>
+                                                    <div className="cart-item-total">{Math.round((item.price * item.quantity) * MKD_RATE)} MKD</div>
+                                                </div>
+                                            ))}
+                                            <div className="cart-summary">
+                                                <h3 className="total-price">Total: {Math.round(cartTotal * MKD_RATE)} MKD</h3>
+                                                <Link to="/checkout" style={{ textDecoration: 'none' }}>
+                                                    <button className="checkout-btn">Proceed to Checkout</button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                        ))}
-                        <div className="cart-summary">
-                            <h3 className="total-price">Total: {Math.round(cartTotal * MKD_RATE)} MKD</h3>
-                            <Link to="/checkout" style={{ textDecoration: 'none' }}>
-                                <button className="checkout-btn">Proceed to Checkout</button>
-                            </Link>
                         </div>
-                    </div>
-                </>
-            )}
-        </div>
-    </div>
-} />
+                    } />
 
                     <Route path="/about" element={
                         <div className="about-page">
@@ -401,29 +439,31 @@ function App() {
 
             <footer className="site-footer">
                 <div className="footer-container">
-                    <div className="footer-column">
-                        <h3 className="footer-logo">Nut Library</h3>
-                        <p className="footer-about">Homemade nut butters, crafted in the heart of Ohrid. 
+                    <div className="footer-left">
+                        <h3 className="footer-brand-title">NUT LIBRARY</h3>
+                        <p className="footer-brand-bio">
+                            Homemade nut butters, crafted in the heart of Ohrid. 
                             Made in small batches with love, attention and the finest ingredients.
                         </p>
                     </div>
-                    <div className="footer-column">
-                        <ul className="footer-links">
-                            <li><Link to="/">Home</Link></li>
-                            <li><Link to="/products">Shop All</Link></li>
-                            <li><Link to="/about">Our Story</Link></li>
-                        </ul>
-                    </div>
-                    <div className="footer-column">
-                        <h4 className="footer-heading">Follow Our Journey on Instagram: </h4>
-                        <div className="footer-social-box">
-                            <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noreferrer" className="instagram-tag">@girlaroundthefood</a>
+
+                    <div className="footer-right">
+                        <div className="footer-instagram-group">
+                            <p className="footer-social-label">FOLLOW OUR JOURNEY ON INSTAGRAM:</p>
+                            <a href="https://instagram.com/girlaroundthefood" target="_blank" rel="noopener noreferrer" className="footer-instagram-handle">
+                                @girlaroundthefood
+                            </a>
+                        </div>
+      
+                        <div className="footer-inline-nav">
+                            <Link to="/">HOME</Link> | <Link to="/products">SHOP</Link> | <Link to="/about">ABOUT</Link>
                         </div>
                     </div>
                 </div>
-                <div className="footer-bottom-bar">
+
+                <div className="footer-bottom">
                     <p>© 2026 NUT LIBRARY. ALL RIGHTS RESERVED.</p>
-                    <p>since 2020</p>
+                    <p>SINCE 2020</p>
                 </div>
             </footer>
         </div>
