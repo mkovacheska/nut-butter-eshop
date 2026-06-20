@@ -1,10 +1,9 @@
 package org.example.model;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,17 +20,18 @@ public class Product {
     private String description;
     private Double price;
     private String imageUrl;
-    @ElementCollection
+    private List<String> images;
     private Map<String, Double> sizeModifiers = new HashMap<>();
 
     public Product() {
     }
 
-    public Product(String name, String description, Double price, String imageUrl) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public Product(String name, String description, double price, String imageUrl, List<String> images) {
+    this.name = name;
+    this.description = description;
+    this.price = price;
+    this.imageUrl = imageUrl;
+    this.images = images;
     }
 
     public Long getId() { return id; }
@@ -49,6 +49,19 @@ public class Product {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public Map<String, Double> getSizeModifiers() { return sizeModifiers; }
-    public void setSizeModifiers(Map<String, Double> sizeModifiers) { this.sizeModifiers = sizeModifiers; }
+    public List<String> getImages() {
+       return images;
+    }
+
+    public void setImages(List<String> images) {
+       this.images = images;
+    }
+
+    public Map<String, Double> getSizeModifiers() {
+    return sizeModifiers;
+}
+
+    public void setSizeModifiers(Map<String, Double> sizeModifiers) {
+        this.sizeModifiers = sizeModifiers;
+    }
 }
