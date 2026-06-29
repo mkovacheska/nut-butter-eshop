@@ -1,0 +1,188 @@
+/* src/Reviews.css */
+
+.reviews-section {
+  margin-top: 100px !important;
+  padding-top: 80px !important;
+  padding-bottom: 80px !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  background-color: #ffffff !important;
+  border-top: 1px solid #f0f0f0 !important;
+}
+
+/* --- HEADER --- */
+.testimonial-header-container {
+  text-align: center !important;
+  margin-bottom: 60px !important;
+}
+
+.testimonial-main-title {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+  color: #1a3a8a !important; /* Navy Blue */
+  letter-spacing: -0.5px !important;
+  margin: 0 !important;
+}
+
+/* --- HORIZONTAL SLIDER --- */
+.testimonial-content-wrapper {
+  margin-bottom: 80px !important;
+}
+
+.testimonial-slider {
+  display: flex !important;
+  overflow-x: auto !important;
+  gap: 40px !important;
+  padding-bottom: 20px !important;
+  scroll-snap-type: x mandatory !important;
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.testimonial-slider::-webkit-scrollbar {
+  display: none !important;
+}
+
+.testimonial-card {
+  flex: 0 0 auto !important;
+  width: 350px !important; /* Fixed width for the cards like Pinterest ref */
+  scroll-snap-align: start !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 15px !important;
+}
+
+.empty-reviews-msg {
+  text-align: center !important;
+  color: #888888 !important;
+  font-style: italic !important;
+}
+
+/* --- TYPOGRAPHY FOR QUOTES --- */
+.testimonial-stars {
+  color: #1a3a8a !important; /* Navy stars instead of gold to match aesthetic */
+  font-size: 1.2rem !important;
+  letter-spacing: 2px !important;
+}
+
+.testimonial-quote {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.6 !important;
+  color: #1a3a8a !important; /* Navy Text */
+  margin: 0 !important;
+}
+
+.testimonial-author {
+  font-size: 0.85rem !important;
+  color: #666666 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin: 0 !important;
+  font-weight: 600 !important;
+}
+
+/* --- MINIMALIST FORM --- */
+.testimonial-form-wrapper {
+  max-width: 600px !important;
+  margin: 0 auto !important;
+  border-top: 1px solid #1a3a8a20 !important; /* Very soft navy line */
+  padding-top: 40px !important;
+}
+
+.testimonial-form-label {
+  text-align: center !important;
+  text-transform: uppercase !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 2px !important;
+  color: #1a3a8a !important;
+  margin-bottom: 30px !important;
+  font-weight: 600 !important;
+}
+
+.testimonial-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+}
+
+.form-row-inline {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 20px !important;
+}
+
+.minimal-input {
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  padding: 10px 0 !important;
+  font-size: 0.95rem !important;
+  color: #1a3a8a !important;
+  outline: none !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: border-color 0.3s ease !important;
+}
+
+.minimal-input::placeholder {
+  color: #bbbbbb !important;
+  font-weight: 300 !important;
+}
+
+.minimal-input:focus {
+  border-bottom-color: #1a3a8a !important;
+}
+
+.textarea-minimal {
+  resize: none !important;
+  margin-bottom: 10px !important;
+}
+
+.minimal-star-select {
+  display: flex !important;
+  gap: 5px !important;
+  white-space: nowrap !important;
+}
+
+.star-icon {
+  cursor: pointer !important;
+  font-size: 1.4rem !important;
+  color: #e0e0e0 !important;
+  transition: color 0.2s ease !important;
+}
+
+.star-icon:hover {
+  color: #1a3a8a !important;
+}
+
+.star-icon.active {
+  color: #1a3a8a !important; /* Navy stars for selection */
+}
+
+.minimal-submit-btn {
+  background: transparent !important;
+  color: #1a3a8a !important;
+  border: 1px solid #1a3a8a !important;
+  padding: 12px 30px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  align-self: flex-start !important; /* Aligns button to the left */
+  transition: all 0.3s ease !important;
+}
+
+.minimal-submit-btn:hover {
+  background: #1a3a8a !important;
+  color: #ffffff !important;
+}
