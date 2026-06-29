@@ -3,7 +3,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, NavLink, useParams, useNavigate } from 'react-router-dom';
-import './Review.css'; // Make sure this file exists in the same folder
+import './Review.css'; 
 
 const OrderConfirmation = () => {
     return (
@@ -38,7 +38,6 @@ const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 1. Format the order items for your Firebase Database dashboard
         const orderItems = cart.map(item => ({
             id: item.id,
             name: item.name,
@@ -62,11 +61,8 @@ const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
         };
 
         try {
-            // STEP A: Save the data safely to Firebase first
             await addDoc(collection(db, "orders"), orderData);
             console.log('Order successfully saved to Firebase Database!');
-
-            // STEP B: Send the EmailJS alert to your inbox instantly
             const orderDetailsString = cart.map(item => 
                 `${item.name} (${item.size}) x ${item.quantity}`
             ).join('\n');
@@ -87,8 +83,6 @@ const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
                 templateParams,
                 'xVyyuL8-4LH8xN9Ji' 
             );
-
-            // STEP C: Clear the bag and show the confirmation screen
             setCart([]);
             navigate('/order-confirmation');
 
@@ -343,7 +337,7 @@ function App() {
                     </div>
                 </div>
 
-                {/* --- NEW ELEGANT REVIEWS SECTION --- */}
+                {}
                 <div className="reviews-section">
                     <div className="testimonial-header-container">
                         <h3 className="testimonial-main-title">A word from our fans</h3>
@@ -403,7 +397,7 @@ function App() {
                         </form>
                     </div>
                 </div>
-                {/* --- END NEW REVIEWS SECTION --- */}
+                {}
 
             </div>
         );
