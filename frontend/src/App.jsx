@@ -1,6 +1,9 @@
+import { db } from './firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, NavLink, useParams, useNavigate } from 'react-router-dom';
+import './Review.css'; // Make sure this file exists in the same folder
 
 const OrderConfirmation = () => {
     return (
@@ -32,39 +35,67 @@ const Checkout = ({ cart, setCart, cartTotal, MKD_RATE }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const orderDetailsString = cart.map(item => 
-            `${item.name} (${item.size}) x ${item.quantity}`
-        ).join('\n');
+        // 1. Format the order items for your Firebase Database dashboard
+        const orderItems = cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            size: item.size,
+            quantity: item.quantity,
+            pricePaidMKD: Math.round(item.price * MKD_RATE)
+        }));
 
-        const templateParams = {
-            user_name: formData.name,
-            user_email: formData.email,
-            user_phone: formData.phone,
-            address: formData.address,
-            city: formData.city,
-            total_price: `${finalTotalMKD} MKD`,
-            order_details: orderDetailsString
+        const orderData = {
+            customerName: formData.name,
+            customerEmail: formData.email,
+            customerPhone: formData.phone,
+            shippingAddress: formData.address,
+            shippingCity: formData.city,
+            subtotalMKD: subtotalMKD,
+            deliveryFeeMKD: DELIVERY_FEE_MKD,
+            finalTotalMKD: finalTotalMKD,
+            items: orderItems,
+            status: "Pending", 
+            createdAt: serverTimestamp() 
         };
 
-        emailjs.send(
-            'service_xx819gu',       
-            'template_82drr57', 
-            templateParams,
-            'xVyyuL8-4LH8xN9Ji' 
-        )
-        .then((response) => {
-            console.log('Email sent successfully!', response.status, response.text);
-            setCart([]);
-            navigate('/order-confirmation'); 
-        })
-        .catch((err) => {
-            console.error('Email failed to send:', err);
+        try {
+            // STEP A: Save the data safely to Firebase first
+            await addDoc(collection(db, "orders"), orderData);
+            console.log('Order successfully saved to Firebase Database!');
+
+            // STEP B: Send the EmailJS alert to your inbox instantly
+            const orderDetailsString = cart.map(item => 
+                `${item.name} (${item.size}) x ${item.quantity}`
+            ).join('\n');
+
+            const templateParams = {
+                user_name: formData.name,
+                user_email: formData.email,
+                user_phone: formData.phone,
+                address: formData.address,
+                city: formData.city,
+                total_price: `${finalTotalMKD} MKD`,
+                order_details: orderDetailsString
+            };
+
+            await emailjs.send(
+                'service_xx819gu',       
+                'template_82drr57', 
+                templateParams,
+                'xVyyuL8-4LH8xN9Ji' 
+            );
+
+            // STEP C: Clear the bag and show the confirmation screen
             setCart([]);
             navigate('/order-confirmation');
-        });
+
+        } catch (err) {
+            console.error('Something went wrong processing your order:', err);
+            alert("There was an issue processing your order. Please try again.");
+        }
     };
 
     return (
@@ -197,6 +228,35 @@ function App() {
         if (!product) {
             return <div className="shop-container"><p>Product not found.</p></div>;
         }
+        const [reviews, setReviews] = useState(product.reviews || []);
+        const [reviewerName, setReviewerName] = useState("");
+        const [rating, setRating] = useState(5);
+        const [comment, setComment] = useState("");
+
+        const handleReviewSubmit = async (e) => {
+             e.preventDefault();
+             if (!reviewerName || !comment) return alert("Please fill in all fields!");
+
+            const newReview = { name: reviewerName, rating: rating, comment: comment };
+
+            try {
+                const response = await fetch(`http://localhost:9000/api/products/${product.id}/reviews`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newReview)
+                });
+
+                if (response.ok) {
+                    const updatedProduct = await response.json();
+                    setReviews(updatedProduct.reviews); 
+                    setReviewerName("");
+                    setComment("");
+                    setRating(5);
+                }
+            } catch (error) {
+                console.error("Error submitting review:", error);
+            }
+        };
 
         const modifiers = product.sizeModifiers || {};
         const currentPrice = (product.price + (modifiers[selectedSize] || 0)) * MKD_RATE;
@@ -269,7 +329,6 @@ function App() {
                             </div>
                         </div>
 
-                        {/* This now displays the FULL rich description with correct paragraph breaks (\n\n) */}
                         <div className="about-details">
                             <p style={{ whiteSpace: 'pre-line' }}>{product.description}</p>
                         </div>
@@ -283,6 +342,69 @@ function App() {
                         </button>
                     </div>
                 </div>
+
+                {/* --- NEW ELEGANT REVIEWS SECTION --- */}
+                <div className="reviews-section">
+                    <div className="testimonial-header-container">
+                        <h3 className="testimonial-main-title">A word from our fans</h3>
+                    </div>
+                    
+                    <div className="testimonial-content-wrapper">
+                        {reviews.length === 0 ? (
+                            <p className="empty-reviews-msg">No notes yet. Be the first to share your thoughts.</p>
+                        ) : (
+                            <div className="testimonial-slider">
+                                {reviews.map((rev, index) => (
+                                    <div key={index} className="testimonial-card">
+                                        <div className="testimonial-stars">
+                                            {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
+                                        </div>
+                                        <p className="testimonial-quote">"{rev.comment}"</p>
+                                        <p className="testimonial-author">— {rev.name}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="testimonial-form-wrapper">
+                        <p className="testimonial-form-label">Add your voice</p>
+                        <form onSubmit={handleReviewSubmit} className="testimonial-form">
+                            <div className="form-row-inline">
+                                <input 
+                                    type="text" 
+                                    value={reviewerName} 
+                                    onChange={(e) => setReviewerName(e.target.value)}
+                                    placeholder="Your Name"
+                                    className="minimal-input" 
+                                />
+                                <div className="minimal-star-select">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <span
+                                            key={star}
+                                            onClick={() => setRating(star)}
+                                            className={`star-icon ${star <= rating ? 'active' : ''}`}
+                                        >
+                                            ★
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                            <textarea 
+                                rows="2" 
+                                value={comment} 
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder="Share your experience with this butter..."
+                                className="minimal-input textarea-minimal"
+                            />
+                            <button type="submit" className="minimal-submit-btn">
+                                Post
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {/* --- END NEW REVIEWS SECTION --- */}
+
             </div>
         );
     };
@@ -344,10 +466,9 @@ function App() {
                                             <h3>{product.name}</h3>
                                         </Link>
                                         <div className="product-info">
-                                            {/* Description removed from here entirely to keep your shop grid cards perfectly uniform */}
                                             <p className="product-desc" style={{ fontSize: '0.9rem', color: '#666', margin: '10px 0 15px 0', lineHeight: '1.4' }}>
-                            {product.description.split('\n\n')[0]}
-                        </p>
+                                                {product.description.split('\n\n')[0]}
+                                            </p>
                                             <div className="product-footer">
                                                 <span className="price">from {Math.round(product.price * MKD_RATE)} MKD</span>
                                                 <Link to={`/product/${product.id}`} className="more-btn">

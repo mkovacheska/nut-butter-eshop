@@ -1,9 +1,12 @@
 package org.example.model;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,8 +23,12 @@ public class Product {
     private String description;
     private Double price;
     private String imageUrl;
+    @ElementCollection
     private List<String> images;
+    @ElementCollection
     private Map<String, Double> sizeModifiers = new HashMap<>();
+    @ElementCollection
+    private List<Review> reviews = new ArrayList<>();
 
     public Product() {
     }
@@ -63,5 +70,11 @@ public class Product {
 
     public void setSizeModifiers(Map<String, Double> sizeModifiers) {
         this.sizeModifiers = sizeModifiers;
+    }
+    public List<Review> getReviews() { 
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews) { 
+        this.reviews = reviews; 
     }
 }
