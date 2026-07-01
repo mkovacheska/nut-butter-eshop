@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 import emailjs from '@emailjs/browser';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, NavLink, useParams, useNavigate } from 'react-router-dom';
@@ -17,6 +17,32 @@ const OrderConfirmation = () => {
                     BACK TO SHOPPING
                 </button>
             </Link>
+        </div>
+    );
+};
+
+const FAQ = () => {
+    return (
+        <div className="shop-container" style={{ padding: '60px 20px', maxWidth: '800px', margin: '0 auto' }}>
+            <h2 className="checkout-main-title" style={{ textAlign: 'center', marginBottom: '40px' }}>Frequently Asked Questions</h2>
+            <div style={{ fontFamily: 'Inter, sans-serif', display: 'flex', flexDirection: 'column', gap: '35px' }}>
+                <div>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#1a3a8a', marginBottom: '10px' }}>Where are your nut butters made?</h4>
+                    <p style={{ color: '#555', lineHeight: '1.6' }}>All our nut butters are crafted freshly in small batches right here in Ohrid, North Macedonia.</p>
+                </div>
+                <div>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#1a3a8a', marginBottom: '10px' }}>Do you use any preservatives or added oils?</h4>
+                    <p style={{ color: '#555', lineHeight: '1.6' }}>No! Everything is 100% natural. We never use palm oil, added stabilizers, or artificial preservatives. Just clean ingredients and genuine care.</p>
+                </div>
+                <div>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#1a3a8a', marginBottom: '10px' }}>How long do the products last?</h4>
+                    <p style={{ color: '#555', lineHeight: '1.6' }}>Because our formulas are fresh and entirely natural, we recommend enjoying them within 6 months of production. Keep your jars stored in a cool, dry place.</p>
+                </div>
+                <div>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#1a3a8a', marginBottom: '10px' }}>What sizes are available?</h4>
+                    <p style={{ color: '#555', lineHeight: '1.6' }}>Our standard options include 200g and 500g jars, which can be selected dynamically on each individual product page.</p>
+                </div>
+            </div>
         </div>
     );
 };
@@ -222,33 +248,71 @@ function App() {
         if (!product) {
             return <div className="shop-container"><p>Product not found.</p></div>;
         }
-        const [reviews, setReviews] = useState(product.reviews || []);
+        
+        const [reviews, setReviews] = useState([]);
         const [reviewerName, setReviewerName] = useState("");
         const [rating, setRating] = useState(5);
         const [comment, setComment] = useState("");
+
+        useEffect(() => {
+            const fetchFirebaseReviews = async () => {
+                if (!product?.id) return;
+                try {
+                    const q = query(
+                        collection(db, "reviews"),
+                        where("productId", "==", product.id)
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    const loadedReviews = [];
+                    
+                    querySnapshot.forEach((doc) => {
+                        loadedReviews.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    loadedReviews.sort((a, b) => {
+                        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+                        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+                        return dateB - dateA;
+                    });
+
+                    setReviews(loadedReviews);
+                } catch (error) {
+                    console.error("Error loading reviews from Firebase:", error);
+                }
+            };
+
+            fetchFirebaseReviews();
+        }, [product]);
 
         const handleReviewSubmit = async (e) => {
              e.preventDefault();
              if (!reviewerName || !comment) return alert("Please fill in all fields!");
 
-            const newReview = { name: reviewerName, rating: rating, comment: comment };
+            const newReview = { 
+                productId: product.id,
+                name: reviewerName, 
+                rating: rating, 
+                comment: comment,
+                createdAt: serverTimestamp()
+            };
 
             try {
-                const response = await fetch(`http://localhost:9000/api/products/${product.id}/reviews`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newReview)
-                });
+                await addDoc(collection(db, "reviews"), newReview);
+                console.log("Review successfully saved to Firebase!");
 
-                if (response.ok) {
-                    const updatedProduct = await response.json();
-                    setReviews(updatedProduct.reviews); 
-                    setReviewerName("");
-                    setComment("");
-                    setRating(5);
-                }
+                const localUiReview = {
+                    ...newReview,
+                    createdAt: new Date()
+                };
+                
+                setReviews([localUiReview, ...reviews]); 
+                setReviewerName("");
+                setComment("");
+                setRating(5);
             } catch (error) {
-                console.error("Error submitting review:", error);
+                console.error("Error submitting review to Firebase:", error);
+                alert("Could not post your review at this time.");
             }
         };
 
@@ -337,7 +401,6 @@ function App() {
                     </div>
                 </div>
 
-                {}
                 <div className="reviews-section">
                     <div className="testimonial-header-container">
                         <h3 className="testimonial-main-title">A word from our fans</h3>
@@ -397,7 +460,6 @@ function App() {
                         </form>
                     </div>
                 </div>
-                {}
 
             </div>
         );
@@ -421,6 +483,7 @@ function App() {
                         <li><NavLink to="/" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>Home</NavLink></li>
                         <li><NavLink to="/products" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>Products</NavLink></li>
                         <li><NavLink to="/about" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>About</NavLink></li>
+                        <li><NavLink to="/faq" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>FAQ</NavLink></li>
                         <li className="cart-link">
                             <NavLink to="/cart" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>Cart ({cartCount})</NavLink>
                         </li>
@@ -448,6 +511,7 @@ function App() {
                         />
                     } />
                     <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                    <Route path="/faq" element={<FAQ />} />
                     <Route path="/products" element={
                         <div className="shop-container">
                             <div className="product-grid">
@@ -571,7 +635,7 @@ function App() {
                         </div>
       
                         <div className="footer-inline-nav">
-                            <Link to="/">HOME</Link> | <Link to="/products">SHOP</Link> | <Link to="/about">ABOUT</Link>
+                            <Link to="/">HOME</Link> | <Link to="/products">SHOP</Link> | <Link to="/about">ABOUT</Link> | <Link to="/faq">FAQ</Link>
                         </div>
                     </div>
                 </div>
