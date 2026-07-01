@@ -389,12 +389,6 @@ body {
   cursor: pointer;
 }
 
-.site-footer {
-  background-color: #ffffff;
-  padding: 60px 60px 30px 60px;
-  border-top: 1px solid #eeeeee;
-}
-
 .footer-container {
   display: flex;
   justify-content: space-between;
@@ -801,4 +795,107 @@ body {
   color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    
+
+    .site-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+        text-align: center;
+    }
+    
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 0;
+    }
+
+    .hero-title {
+        font-size: 2.2rem !important; 
+        line-height: 1.3;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr !important; 
+        gap: 25px;
+        padding: 0 10px;
+    }
+
+    .about-container {
+        flex-direction: column !important;
+        gap: 30px;
+        padding: 20px 10px;
+    }
+
+    .about-image-side, 
+    .about-text-side {
+        width: 100% !important;
+    }
+
+    .thumbnail-row {
+        justify-content: start;
+    }
+
+    .checkout-layout {
+        flex-direction: column !important;
+        gap: 40px;
+    }
+
+    .checkout-form-side,
+    .order-summary-card {
+        width: 100% !important;
+    }
+
+    .checkout-row-double {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .cart-item-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .cart-item-info {
+        align-items: center;
+    }
+
+    .cart-item-total {
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    .footer-container {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .footer-right {
+        align-items: center !important;
+    }
+
+    .footer-inline-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.8rem !important;
+    }
+    
+    .checkout-main-title {
+        font-size: 1.8rem !important;
+    }
 }
